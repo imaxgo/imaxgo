@@ -12,10 +12,10 @@ type BotClient struct {
 	ChatServiceV1 chatsv1.IChatService
 }
 
-func NewBotClient(token string, h http.Client, opts ...Option) *BotClient {
+func NewBotClient(token string, h *http.Client, opts ...Option) *BotClient {
 	config := &backend.Config{
 		Token:      token,
-		HttpClient: &h,
+		HttpClient: h,
 	}
 
 	client := &BotClient{}
