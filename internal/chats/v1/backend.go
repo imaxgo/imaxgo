@@ -29,7 +29,7 @@ type ChatBackend struct {
 	B backend.IBackend
 }
 
-func NewChatBackend(b backend.IBackend) IChatBackendV1 {
+func NewChatBackend(b backend.IBackend) *ChatBackend {
 	return &ChatBackend{B: b}
 }
 
