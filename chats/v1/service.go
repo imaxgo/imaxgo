@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	apiv1 "github.com/imaxgo/imaxgo/internal/api/v1"
+	"github.com/imaxgo/imaxgo/api/v1"
 	"io"
 )
 

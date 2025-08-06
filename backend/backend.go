@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	apiv1 "github.com/imaxgo/imaxgo/internal/api/v1"
+	"github.com/imaxgo/imaxgo/api/v1"
 	"io"
 	"net/http"
 	"net/url"

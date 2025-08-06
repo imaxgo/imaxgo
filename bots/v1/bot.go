@@ -1,6 +1,8 @@
 package botsv1
 
-import usersv1 "github.com/imaxgo/imaxgo/internal/users/v1"
+import (
+	"github.com/imaxgo/imaxgo/users/v1"
+)
 
 type BotInfo struct {
 	ID              int64        `json:"user_id"`

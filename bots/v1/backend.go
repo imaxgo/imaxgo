@@ -2,7 +2,7 @@ package botsv1
 
 import (
 	"context"
-	"github.com/imaxgo/imaxgo/internal/backend"
+	"github.com/imaxgo/imaxgo/backend"
 	"io"
 	"net/http"
 	"net/url"

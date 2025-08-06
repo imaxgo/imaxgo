@@ -3,8 +3,8 @@ package chatsv1
 import (
 	"context"
 	"fmt"
-	"github.com/imaxgo/imaxgo/internal/backend"
-	usersv1 "github.com/imaxgo/imaxgo/internal/users/v1"
+	"github.com/imaxgo/imaxgo/backend"
+	"github.com/imaxgo/imaxgo/users/v1"
 	"io"
 	"net/http"
 	"net/url"

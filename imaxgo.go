@@ -1,9 +1,9 @@
 package imaxgo
 
 import (
-	"github.com/imaxgo/imaxgo/internal/backend"
-	"github.com/imaxgo/imaxgo/internal/bots/v1"
-	"github.com/imaxgo/imaxgo/internal/chats/v1"
+	"github.com/imaxgo/imaxgo/backend"
+	"github.com/imaxgo/imaxgo/bots/v1"
+	"github.com/imaxgo/imaxgo/chats/v1"
 	"net/http"
 )
 
