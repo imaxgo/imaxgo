@@ -20,14 +20,18 @@ type IChatService interface {
 	SendAction(ctx context.Context, chatID int64, action ChatDisplayAction) (bool, error)
 }
 
-var _ IChatService = (*ChatService)(nil)
+var _ IChatService = (*chatService)(nil)
 
-type ChatService struct {
+type chatService struct {
 	B IChatBackendV1
 	K string
 }
 
-func (s *ChatService) GetAll(ctx context.Context, count, marker int64) (*ChatList, error) {
+func NewChatService(b IChatBackendV1, k string) IChatService {
+	return &chatService{B: b, K: k}
+}
+
+func (s *chatService) GetAll(ctx context.Context, count, marker int64) (*ChatList, error) {
 	switch res, err := s.B.GetAll(ctx, s.K, count, marker); {
 	case err != nil:
 		return nil, err
@@ -41,7 +45,7 @@ func (s *ChatService) GetAll(ctx context.Context, count, marker int64) (*ChatLis
 	}
 }
 
-func (s *ChatService) Get(ctx context.Context, id int64) (*Chat, error) {
+func (s *chatService) Get(ctx context.Context, id int64) (*Chat, error) {
 	switch resp, err := s.B.Get(ctx, s.K, id); {
 	case err != nil:
 		return nil, err
@@ -55,7 +59,7 @@ func (s *ChatService) Get(ctx context.Context, id int64) (*Chat, error) {
 	}
 }
 
-func (s *ChatService) GetMembership(ctx context.Context, chatID int64) (*ChatMember, error) {
+func (s *chatService) GetMembership(ctx context.Context, chatID int64) (*ChatMember, error) {
 	switch resp, err := s.B.GetMembership(ctx, s.K, chatID); {
 	case err != nil:
 		return nil, err
@@ -69,7 +73,7 @@ func (s *ChatService) GetMembership(ctx context.Context, chatID int64) (*ChatMem
 	}
 }
 
-func (s *ChatService) GetMembers(ctx context.Context, chatID, count, marker int64) (*ChatMemberList, error) {
+func (s *chatService) GetMembers(ctx context.Context, chatID, count, marker int64) (*ChatMemberList, error) {
 	switch resp, err := s.B.GetMembers(ctx, s.K, chatID, count, marker); {
 	case err != nil:
 		return nil, err
@@ -82,7 +86,7 @@ func (s *ChatService) GetMembers(ctx context.Context, chatID, count, marker int6
 	}
 }
 
-func (s *ChatService) Leave(ctx context.Context, chatID int64) (bool, error) {
+func (s *chatService) Leave(ctx context.Context, chatID int64) (bool, error) {
 	switch res, err := s.B.Leave(ctx, s.K, chatID); {
 	case err != nil:
 		return false, err
@@ -101,7 +105,7 @@ func (s *ChatService) Leave(ctx context.Context, chatID int64) (bool, error) {
 	}
 }
 
-func (s *ChatService) Edit(ctx context.Context, chatID int64) (*Chat, error) {
+func (s *chatService) Edit(ctx context.Context, chatID int64) (*Chat, error) {
 	switch resp, err := s.B.Edit(ctx, s.K, chatID); {
 	case err != nil:
 		return nil, err
@@ -115,7 +119,7 @@ func (s *ChatService) Edit(ctx context.Context, chatID int64) (*Chat, error) {
 	}
 }
 
-func (s *ChatService) AddMember(ctx context.Context, chatID int64, users []int64) (bool, error) {
+func (s *chatService) AddMember(ctx context.Context, chatID int64, users []int64) (bool, error) {
 	switch resp, err := s.B.AddMember(ctx, s.K, chatID, users); {
 	case err != nil:
 		return false, err
@@ -133,7 +137,7 @@ func (s *ChatService) AddMember(ctx context.Context, chatID int64, users []int64
 	}
 }
 
-func (s *ChatService) RemoveMember(ctx context.Context, chatID, userID int64) (bool, error) {
+func (s *chatService) RemoveMember(ctx context.Context, chatID, userID int64) (bool, error) {
 	switch resp, err := s.B.RemoveMember(ctx, s.K, chatID, userID); {
 	case err != nil:
 		return false, err
@@ -149,7 +153,7 @@ func (s *ChatService) RemoveMember(ctx context.Context, chatID, userID int64) (b
 	}
 }
 
-func (s *ChatService) SendAction(ctx context.Context, chatID int64, action ChatDisplayAction) (bool, error) {
+func (s *chatService) SendAction(ctx context.Context, chatID int64, action ChatDisplayAction) (bool, error) {
 	switch resp, err := s.B.SendAction(ctx, s.K, chatID, action); {
 	case err != nil:
 		return false, err

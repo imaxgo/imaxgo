@@ -11,15 +11,22 @@ type IBotService interface {
 	PatchMe(ctx context.Context, val *PatchBotRequest) (*BotInfo, error)
 }
 
-var _ IBotService = (*BotService)(nil)
+var _ IBotService = (*botService)(nil)
 
-type BotService struct {
+type botService struct {
 	B IBotBackendV1
 	K string
 }
 
+func NewBotService(b IBotBackendV1, k string) IBotService {
+	return &botService{
+		B: b,
+		K: k,
+	}
+}
+
 // GET /me
-func (s *BotService) GetMe(ctx context.Context) (*BotInfo, error) {
+func (s *botService) GetMe(ctx context.Context) (*BotInfo, error) {
 	switch res, err := s.B.GetMe(ctx, s.K); {
 	case err != nil:
 		return nil, err
@@ -33,7 +40,7 @@ func (s *BotService) GetMe(ctx context.Context) (*BotInfo, error) {
 }
 
 // PATCH /me
-func (s *BotService) PatchMe(ctx context.Context, val *PatchBotRequest) (*BotInfo, error) {
+func (s *botService) PatchMe(ctx context.Context, val *PatchBotRequest) (*BotInfo, error) {
 	switch res, err := s.B.PatchMe(ctx, s.K, val); {
 	case err != nil:
 		return nil, err

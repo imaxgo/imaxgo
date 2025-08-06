@@ -11,7 +11,7 @@ import (
 	"strconv"
 )
 
-var _ IChatBackendV1 = (*ChatBackend)(nil)
+var _ IChatBackendV1 = (*chatBackend)(nil)
 
 type IChatBackendV1 interface {
 	GetAll(ctx context.Context, service string, count, marker int64) (io.ReadCloser, error)
@@ -25,15 +25,15 @@ type IChatBackendV1 interface {
 	SendAction(ctx context.Context, service string, chatID int64, action ChatDisplayAction) (io.ReadCloser, error)
 }
 
-type ChatBackend struct {
+type chatBackend struct {
 	B backend.IBackend
 }
 
-func NewChatBackend(b backend.IBackend) *ChatBackend {
-	return &ChatBackend{B: b}
+func NewChatBackend(b backend.IBackend) IChatBackendV1 {
+	return &chatBackend{B: b}
 }
 
-func (b *ChatBackend) GetAll(ctx context.Context, service string, count, marker int64) (io.ReadCloser, error) {
+func (b *chatBackend) GetAll(ctx context.Context, service string, count, marker int64) (io.ReadCloser, error) {
 	q := url.Values{}
 	if count > 0 {
 		q.Set("count", strconv.FormatInt(count, 10))
@@ -46,15 +46,15 @@ func (b *ChatBackend) GetAll(ctx context.Context, service string, count, marker 
 	return b.B.CallRaw(ctx, http.MethodGet, service, q, nil)
 }
 
-func (b *ChatBackend) Get(ctx context.Context, service string, chatID int64) (io.ReadCloser, error) {
+func (b *chatBackend) Get(ctx context.Context, service string, chatID int64) (io.ReadCloser, error) {
 	return b.B.CallRaw(ctx, fmt.Sprintf("%s/%d", service, chatID), http.MethodGet, url.Values{}, nil)
 }
 
-func (b *ChatBackend) GetMembership(ctx context.Context, service string, chatID int64) (io.ReadCloser, error) {
+func (b *chatBackend) GetMembership(ctx context.Context, service string, chatID int64) (io.ReadCloser, error) {
 	return b.B.CallRaw(ctx, fmt.Sprintf("%s/%d/members/me", service, chatID), http.MethodGet, url.Values{}, nil)
 }
 
-func (b *ChatBackend) GetMembers(ctx context.Context, service string, chatID, count, marker int64) (io.ReadCloser, error) {
+func (b *chatBackend) GetMembers(ctx context.Context, service string, chatID, count, marker int64) (io.ReadCloser, error) {
 	q := url.Values{}
 	if count > 0 {
 		q.Set("count", strconv.FormatInt(count, 10))
@@ -67,15 +67,15 @@ func (b *ChatBackend) GetMembers(ctx context.Context, service string, chatID, co
 	return b.B.CallRaw(ctx, fmt.Sprintf("%s/%d/members", service, chatID), http.MethodGet, q, nil)
 }
 
-func (b *ChatBackend) Leave(ctx context.Context, service string, chatID int64) (io.ReadCloser, error) {
+func (b *chatBackend) Leave(ctx context.Context, service string, chatID int64) (io.ReadCloser, error) {
 	return b.B.CallRaw(ctx, fmt.Sprintf("%s/%d/members/me", service, chatID), http.MethodDelete, url.Values{}, nil)
 }
 
-func (b *ChatBackend) Edit(ctx context.Context, service string, chatID int64) (io.ReadCloser, error) {
+func (b *chatBackend) Edit(ctx context.Context, service string, chatID int64) (io.ReadCloser, error) {
 	return b.B.CallRaw(ctx, fmt.Sprintf("%s/%d", service, chatID), http.MethodPatch, url.Values{}, nil)
 }
 
-func (b *ChatBackend) AddMember(ctx context.Context, service string, chatID int64, users []int64) (io.ReadCloser, error) {
+func (b *chatBackend) AddMember(ctx context.Context, service string, chatID int64, users []int64) (io.ReadCloser, error) {
 	if len(users) == 0 {
 		return nil, fmt.Errorf("no users to add")
 	}
@@ -83,12 +83,12 @@ func (b *ChatBackend) AddMember(ctx context.Context, service string, chatID int6
 	return b.B.CallRaw(ctx, fmt.Sprintf("%s/%d/members", service, chatID), http.MethodPost, url.Values{}, &usersv1.UserIDList{Users: users})
 }
 
-func (b *ChatBackend) RemoveMember(ctx context.Context, service string, chatID, userID int64) (io.ReadCloser, error) {
+func (b *chatBackend) RemoveMember(ctx context.Context, service string, chatID, userID int64) (io.ReadCloser, error) {
 	q := url.Values{}
 	q.Set("user_id", strconv.FormatInt(userID, 10))
 	return b.B.CallRaw(ctx, fmt.Sprintf("%s/%d/members", service, chatID), http.MethodDelete, q, nil)
 }
 
-func (b *ChatBackend) SendAction(ctx context.Context, service string, chatID int64, action ChatDisplayAction) (io.ReadCloser, error) {
+func (b *chatBackend) SendAction(ctx context.Context, service string, chatID int64, action ChatDisplayAction) (io.ReadCloser, error) {
 	return b.B.CallRaw(ctx, fmt.Sprintf("%s/%d/actions", service, chatID), http.MethodPost, url.Values{}, &ChatActionRequest{Action: action})
 }
