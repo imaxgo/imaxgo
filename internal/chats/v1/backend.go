@@ -29,6 +29,10 @@ type ChatBackend struct {
 	B backend.IBackend
 }
 
+func NewChatBackend(b backend.IBackend) IChatBackendV1 {
+	return &ChatBackend{B: b}
+}
+
 func (b *ChatBackend) GetAll(ctx context.Context, service string, count, marker int64) (io.ReadCloser, error) {
 	q := url.Values{}
 	if count > 0 {
