@@ -19,3 +19,9 @@ func WithChatServiceV1() Option {
 		bot.ChatServiceV1 = chatsv1.NewChatService(chatsv1.NewChatBackend(backend.NewBackend(*c)), "chats")
 	}
 }
+
+func WithUpdateServiceV1() Option {
+	return func(bot *BotClient, c *backend.Config) {
+		bot.UpdateServiceV1 = updatesv1.NewUpdateService(updatesv1.NewUpdateBacked(backend.NewBackend(*c)), "updates")
+	}
+}
