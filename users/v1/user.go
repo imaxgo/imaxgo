@@ -31,3 +31,7 @@ func (u *User) AsUser() *User {
 		LastActivity: u.LastActivity,
 	}
 }
+
+type UserIDList struct {
+	Users []int64 `json:"user_ids"`
+}
