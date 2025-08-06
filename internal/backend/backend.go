@@ -88,6 +88,7 @@ func (b *Backend) CallRaw(ctx context.Context, httpMethod, service string, q url
 
 	// https://github.com/max-messenger/max-bot-api-client-go/blob/cade49f7d72fdc09996a266c15f3699016f3ffae/client.go#L89
 	req.Header.Set("User-Agent", fmt.Sprintf("max-bot-api-client-go/%s", b.Version()))
+	req.Header.Set("Accept", "application/json")
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
