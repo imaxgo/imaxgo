@@ -102,7 +102,16 @@ func (b *Backend) CallRaw(ctx context.Context, httpMethod, service string, q url
 	}(resp.Body)
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("http status: %s", resp.Body)
+		defer func(Body io.ReadCloser) {
+			_ = Body.Close()
+		}(resp.Body)
+
+		buf := apiv1.ApiError{}
+		if err = json.NewDecoder(resp.Body).Decode(&buf); err != nil {
+			return nil, err
+		}
+
+		return nil, &buf
 	}
 
 	return resp.Body, nil
