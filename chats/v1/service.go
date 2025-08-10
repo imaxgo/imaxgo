@@ -23,11 +23,11 @@ type IChatService interface {
 var _ IChatService = (*chatService)(nil)
 
 type chatService struct {
-	B IChatBackendV1
+	B IChatBackend
 	K string
 }
 
-func NewChatService(b IChatBackendV1, k string) IChatService {
+func NewChatService(b IChatBackend, k string) IChatService {
 	return &chatService{B: b, K: k}
 }
 

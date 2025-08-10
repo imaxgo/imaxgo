@@ -11,9 +11,9 @@ import (
 	"strconv"
 )
 
-var _ IChatBackendV1 = (*chatBackend)(nil)
+var _ IChatBackend = (*chatBackend)(nil)
 
-type IChatBackendV1 interface {
+type IChatBackend interface {
 	GetAll(ctx context.Context, service string, count, marker int64) (io.ReadCloser, error)
 	Get(ctx context.Context, service string, id int64) (io.ReadCloser, error)
 	GetMembership(ctx context.Context, service string, chatID int64) (io.ReadCloser, error)
@@ -29,7 +29,7 @@ type chatBackend struct {
 	B backend.IBackend
 }
 
-func NewChatBackend(b backend.IBackend) IChatBackendV1 {
+func NewChatBackend(b backend.IBackend) IChatBackend {
 	return &chatBackend{B: b}
 }
 
