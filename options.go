@@ -4,6 +4,7 @@ import (
 	"github.com/imaxgo/imaxgo/backend"
 	botsv1 "github.com/imaxgo/imaxgo/bots/v1"
 	chatsv1 "github.com/imaxgo/imaxgo/chats/v1"
+	subscriptionsv1 "github.com/imaxgo/imaxgo/subscriptions/v1"
 	updatesv1 "github.com/imaxgo/imaxgo/updates/v1"
 )
 
@@ -24,5 +25,14 @@ func WithChatServiceV1() Option {
 func WithUpdateServiceV1() Option {
 	return func(bot *BotClient, c *backend.Config) {
 		bot.UpdateServiceV1 = updatesv1.NewUpdateService(updatesv1.NewUpdateBacked(backend.NewBackend(*c)), "updates")
+	}
+}
+
+func WithSubscriptionsServiceV1() Option {
+	return func(bot *BotClient, c *backend.Config) {
+		bot.SubscriptionServiceV1 = subscriptionsv1.NewSubscriptionService(subscriptionsv1.NewSubscriptionBackend(
+			backend.NewBackend(*c)),
+			"subscriptions",
+		)
 	}
 }
