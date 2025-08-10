@@ -12,6 +12,18 @@ type ApiSimpleResponse struct {
 	Message string `json:"message,omitempty"`
 }
 
+func (api *ApiSimpleResponse) Error() string {
+	if api.Success {
+		return ""
+	}
+
+	if api.Message == "" && !api.Success {
+		api.Message = "something went wrong"
+	}
+
+	return api.Message
+}
+
 var _ error = (*ApiError)(nil)
 
 type ApiError struct {
