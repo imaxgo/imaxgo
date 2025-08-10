@@ -4,6 +4,7 @@ import (
 	"github.com/imaxgo/imaxgo/backend"
 	botsv1 "github.com/imaxgo/imaxgo/bots/v1"
 	chatsv1 "github.com/imaxgo/imaxgo/chats/v1"
+	updatesv1 "github.com/imaxgo/imaxgo/updates/v1"
 )
 
 type Option func(bot *BotClient, c *backend.Config)
