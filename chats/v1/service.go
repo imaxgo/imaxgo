@@ -133,7 +133,11 @@ func (s *chatService) AddMember(ctx context.Context, chatID int64, users []int64
 			return false, err
 		}
 
-		return buf.Success, errors.New(buf.Message)
+		if buf.Error() != "" {
+			return false, errors.New(buf.Message)
+		}
+
+		return true, nil
 	}
 }
 
@@ -149,7 +153,12 @@ func (s *chatService) RemoveMember(ctx context.Context, chatID, userID int64) (b
 		if err = json.NewDecoder(resp).Decode(&buf); err != nil {
 			return false, err
 		}
-		return buf.Success, errors.New(buf.Message)
+
+		if buf.Error() != "" {
+			return false, errors.New(buf.Message)
+		}
+
+		return true, nil
 	}
 }
 
@@ -165,6 +174,10 @@ func (s *chatService) SendAction(ctx context.Context, chatID int64, action ChatD
 		if err = json.NewDecoder(resp).Decode(&buf); err != nil {
 			return false, err
 		}
-		return buf.Success, errors.New(buf.Message)
+
+		if buf.Error() != "" {
+			return false, errors.New(buf.Message)
+		}
+		return true, nil
 	}
 }
