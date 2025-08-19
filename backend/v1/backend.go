@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/imaxgo/imaxgo/api/v1"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 )
@@ -23,6 +24,7 @@ type IBackend interface {
 	Token() string
 
 	CallRaw(ctx context.Context, httpMethod, service string, q url.Values, body any) (io.ReadCloser, error)
+	CallUpload(ctx context.Context, httpMethod, url string, body io.Reader) (io.ReadCloser, error)
 }
 
 type Backend struct {
@@ -73,6 +75,34 @@ func (b *Backend) NewRawRequest(ctx context.Context, method, service string, q u
 	return http.NewRequestWithContext(ctx, method, makeBotApiURL(b.Api(), service, q), httpBody)
 }
 
+func (b *Backend) NewUploadRequest(ctx context.Context, method, url string, body io.Reader) (*http.Request, string, error) {
+	buf := new(bytes.Buffer)
+	mwr := multipart.NewWriter(buf)
+	fwr, err := mwr.CreateFormFile("data", "file")
+
+	if err != nil {
+		return nil, "", err
+	}
+
+	if _, err = io.Copy(fwr, body); err != nil {
+		return nil, "", err
+	}
+
+	contentType := mwr.FormDataContentType()
+
+	if err = mwr.Close(); err != nil {
+		return nil, "", err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, method, url, buf)
+
+	if err != nil {
+		return nil, "", err
+	}
+
+	return req, contentType, nil
+}
+
 func (b *Backend) CallRaw(ctx context.Context, httpMethod, service string, q url.Values, body any) (io.ReadCloser, error) {
 	var resp *http.Response
 
@@ -104,6 +134,31 @@ func (b *Backend) CallRaw(ctx context.Context, httpMethod, service string, q url
 		}
 
 		return nil, &buf
+	}
+
+	return resp.Body, nil
+}
+
+func (b *Backend) CallUpload(ctx context.Context, httpMethod, url string, body io.Reader) (io.ReadCloser, error) {
+	req, content, err := b.NewUploadRequest(ctx, httpMethod, url, body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("User-Agent", fmt.Sprintf("max-bot-api-client-go/%s", b.Version()))
+	req.Header.Set("Content-Type", content)
+
+	resp, err := b.client.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		defer func(Body io.ReadCloser) {
+			_ = Body.Close()
+		}(resp.Body)
 	}
 
 	return resp.Body, nil
