@@ -49,10 +49,6 @@ func (b *Backend) Token() string {
 }
 
 func (b *Backend) NewRawRequest(ctx context.Context, method, service string, q url.Values, body any) (*http.Request, error) {
-	if method == "" || (method != http.MethodGet && method != http.MethodPost) {
-		return nil, fmt.Errorf("invalid method: %s", method)
-	}
-
 	var httpBody io.Reader = http.NoBody
 
 	if body != nil {
