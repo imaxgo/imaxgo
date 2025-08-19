@@ -2,7 +2,7 @@ package subscriptionsv1
 
 import (
 	"context"
-	"github.com/imaxgo/imaxgo/backend"
+	"github.com/imaxgo/imaxgo/backend/v1"
 	"io"
 	"net/http"
 	"net/url"
@@ -17,7 +17,7 @@ type ISubscriptionBackend interface {
 var _ ISubscriptionBackend = (*subscriptionBackend)(nil)
 
 type subscriptionBackend struct {
-	B backend.IBackend
+	B backendv1.IBackend
 }
 
 func (s *subscriptionBackend) Get(ctx context.Context, route string) (io.ReadCloser, error) {
@@ -34,6 +34,6 @@ func (s *subscriptionBackend) Unsubscribe(ctx context.Context, route, webhookURL
 	return s.B.CallRaw(ctx, http.MethodDelete, route, q, nil)
 }
 
-func NewSubscriptionBackend(b backend.IBackend) ISubscriptionBackend {
+func NewSubscriptionBackend(b backendv1.IBackend) ISubscriptionBackend {
 	return &subscriptionBackend{B: b}
 }

@@ -2,7 +2,7 @@ package updatesv1
 
 import (
 	"context"
-	"github.com/imaxgo/imaxgo/backend"
+	"github.com/imaxgo/imaxgo/backend/v1"
 	"io"
 	"net/http"
 	"net/url"
@@ -16,10 +16,10 @@ type IUpdateBacked interface {
 var _ IUpdateBacked = (*updateBacked)(nil)
 
 type updateBacked struct {
-	B backend.IBackend
+	B backendv1.IBackend
 }
 
-func NewUpdateBacked(b backend.IBackend) IUpdateBacked {
+func NewUpdateBacked(b backendv1.IBackend) IUpdateBacked {
 	return &updateBacked{B: b}
 }
 

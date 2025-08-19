@@ -1,4 +1,4 @@
-package backend
+package backendv1
 
 import (
 	"bytes"
@@ -96,10 +96,6 @@ func (b *Backend) CallRaw(ctx context.Context, httpMethod, service string, q url
 	if resp, err = b.client.Do(req); err != nil {
 		return nil, err
 	}
-
-	defer func(Body io.ReadCloser) {
-		_ = Body.Close()
-	}(resp.Body)
 
 	if resp.StatusCode != http.StatusOK {
 		defer func(Body io.ReadCloser) {

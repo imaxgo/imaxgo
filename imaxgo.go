@@ -1,7 +1,7 @@
 package imaxgo
 
 import (
-	"github.com/imaxgo/imaxgo/backend"
+	"github.com/imaxgo/imaxgo/backend/v1"
 	"github.com/imaxgo/imaxgo/bots/v1"
 	"github.com/imaxgo/imaxgo/chats/v1"
 	"github.com/imaxgo/imaxgo/subscriptions/v1"
@@ -17,7 +17,7 @@ type BotClient struct {
 }
 
 func NewBotClient(token string, h *http.Client, opts ...Option) *BotClient {
-	config := &backend.Config{
+	config := &backendv1.Config{
 		Token:      token,
 		HttpClient: h,
 	}

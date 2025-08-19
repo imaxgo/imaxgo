@@ -2,7 +2,7 @@ package botsv1
 
 import (
 	"context"
-	"github.com/imaxgo/imaxgo/backend"
+	"github.com/imaxgo/imaxgo/backend/v1"
 	"io"
 	"net/http"
 	"net/url"
@@ -16,10 +16,10 @@ type IBotBackendV1 interface {
 }
 
 type botBackend struct {
-	B backend.IBackend
+	B backendv1.IBackend
 }
 
-func NewBotBackend(b backend.IBackend) IBotBackendV1 {
+func NewBotBackend(b backendv1.IBackend) IBotBackendV1 {
 	return &botBackend{B: b}
 }
 

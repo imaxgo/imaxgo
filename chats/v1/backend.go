@@ -3,7 +3,7 @@ package chatsv1
 import (
 	"context"
 	"fmt"
-	"github.com/imaxgo/imaxgo/backend"
+	"github.com/imaxgo/imaxgo/backend/v1"
 	"github.com/imaxgo/imaxgo/users/v1"
 	"io"
 	"net/http"
@@ -26,10 +26,10 @@ type IChatBackend interface {
 }
 
 type chatBackend struct {
-	B backend.IBackend
+	B backendv1.IBackend
 }
 
-func NewChatBackend(b backend.IBackend) IChatBackend {
+func NewChatBackend(b backendv1.IBackend) IChatBackend {
 	return &chatBackend{B: b}
 }
 
