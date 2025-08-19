@@ -37,3 +37,12 @@ func WithSubscriptionsServiceV1() Option {
 		)
 	}
 }
+
+func WithUploadsServiceV1() Option {
+	return func(bot *BotClient, c *backendv1.Config) {
+		bot.UploadServiceV1 = uploadsv1.NewUploadService(uploadsv1.NewUploadBackend(
+			backendv1.NewBackend(*c)),
+			"uploads",
+		)
+	}
+}
